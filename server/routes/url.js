@@ -4,7 +4,7 @@ import Counter from "../models/Counter.js"
 
 const router = express.Router();
 
-const BASE62 = "0123456789abcdefghijklmnopqrstuvwxyABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const BASE62 = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 function seededRandom(seed) {
     const a = 1664525;
@@ -26,6 +26,19 @@ function generateCode(counter){
 
 router.post("/api/shorten", async(req, res) => {
     const { originalUrl } = req.body;
+    if(!originalUrl || typeof originalUrl !== 'string'){
+        return res.status(400).json({error: "URL is required."});
+    }
+    try{
+        new URL(originalUrl);
+    } catch {
+        return res.status(400).json({error: "Invalid URL"});
+    }
+    const parsed = new URL(originalUrl);
+    if(!['http:', 'https:'].includes(parsed.protocol)){
+        return res.status(400).json({ error: "Only http and https URLs are allowed" });
+    }
+
     let shortCode;
     let saved = false;
     while(!saved){
@@ -53,14 +66,18 @@ router.post("/api/shorten", async(req, res) => {
 });
 
 router.get("/:code", async(req, res) => {
-    const code = req.params.code;
-    const doc = await Url.findOne({shortCode: code});
+    try{
+        const code = req.params.code;
+        const doc = await Url.findOne({shortCode: code});
 
-    if(doc) {
-        const longUrl = doc.originalUrl;
-        res.redirect(301, longUrl);
-    } else {
-        res.status(404).json({error: "URL not found"});
+        if(doc) {
+            const longUrl = doc.originalUrl;
+            res.redirect(301, longUrl);
+        } else {
+            res.status(404).json({error: "URL not found"});
+        }
+    } catch (err) {
+        res.status(500).json({error: "Server error"});
     }
 });
 

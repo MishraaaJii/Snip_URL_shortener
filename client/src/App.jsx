@@ -10,7 +10,6 @@ function App() {
 
     async function handleSubmit() {
         if (!originalUrl) return
-        snipSound.play()
         setLoading(true)
         const response = await fetch(`${import.meta.env.VITE_API_URL}/api/shorten`, {
             method: "POST",
@@ -18,7 +17,13 @@ function App() {
             body: JSON.stringify({ originalUrl })
         })
         const data = await response.json()
+        if(!response.ok){
+            alert(data.error || "Something went wrong");
+            setLoading(false);
+            return;
+        }
         setShortCode(data.shortCode)
+        snipSound.play()
         setLoading(false)
     }
 
