@@ -4,29 +4,50 @@ import Counter from "../models/Counter.js"
 
 const router = express.Router();
 
-const Base62 = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const BASE62 = "0123456789abcdefghijklmnopqrstuvwxyABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-function toBase62(num){
+function seededRandom(seed) {
+    const a = 1664525;
+    const c = 1013904223;
+    const m = 2 ** 32;
+    return ((a * seed + c) % m);
+}
+
+function generateCode(counter){
+    const randomNum = seededRandom(counter);
     let result = "";
+    let num = randomNum;
     while(num > 0){
-        result = Base62[num % 62] + result;
-        num = Math.floor(num / 62);
+        result = BASE62[num % 62] + result;
+        num = Math.floor(num/62);
     }
-    return result;
+    return result.slice(0, 5).padStart(5, '0');
 }
 
 router.post("/api/shorten", async(req, res) => {
     const { originalUrl } = req.body;
-    const counter = await Counter.findOneAndUpdate(
-        { _id: "url_counter" },
-        { $inc: {value: 1} },
-        {new: true, upsert: true}
-    );
+    let shortCode;
+    let saved = false;
+    while(!saved){
+        const counter = await Counter.findOneAndUpdate(
+            { _id: "url_counter" },
+            { $inc: {value: 1} },
+            {returnDocument: 'after', upsert: true}
+        );
+        shortCode = generateCode(counter.value);
 
-    const shortCode = toBase62(counter.value);
+        try{
+            const url = new Url({shortCode, originalUrl});
+            await url.save();
+            saved = true;
+        } catch (err) {
+            if(err.code === 11000){
+                continue;
+            }
+            throw err;
+        }
 
-    const url = new Url({shortCode, originalUrl});
-    await url.save();
+    }
 
     res.json({ shortCode });
 });
