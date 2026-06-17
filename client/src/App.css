@@ -1,0 +1,143 @@
+@import url('https://fonts.googleapis.com/css2?family=Rowdies:wght@700&family=Pacifico&family=Nunito:wght@500;600&family=DM+Sans&family=Josefin+Sans&display=swap');
+
+#root {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-image: url('./bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-color: #f6ede7;
+    min-height: 100vh;
+}
+
+.page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.nav {
+    margin-top: 100px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 48px 0 0;
+    z-index: 2;
+}
+
+.nav-logo {
+    font-family: 'Rowdies', sans-serif;
+    font-size: 48px;
+    font-weight: 700;
+    color: #000000;
+    letter-spacing: -1px;
+}
+
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 860px;
+    padding: 0 40px;
+    gap: 20px;
+    margin-top: 60px;
+    z-index: 2;
+}
+
+.tagline {
+    font-family: 'Pacifico', cursive;
+    font-size: 38px;
+    font-weight: 400;
+    color: #1a1a1a;
+    letter-spacing: 1px;
+    margin-bottom: -15px;
+}
+
+.input-row {
+    display: flex;
+    width: 100%;
+    border: 1.5px solid #000000;
+    border-radius: 16px;
+    background: #ffffff;
+    padding: 6px;
+    gap: 8px;
+}
+
+.input {
+    flex: 1;
+    padding: 14px 22px;
+    font-size: 18px;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #1a1a1a;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.input::placeholder {
+    color: #c0b8b0;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.button-snip {
+    padding: 12px 35px;
+    background-color: #ffde59;
+    color: #000000;
+    border: none;
+    font-family: 'Nunito', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: background-color 0.2s;
+    border-radius: 12px;
+    border: 1.5px solid #000000;
+}
+
+.button-snip:active {
+  opacity: 0.8;
+}
+
+.button-copy {
+    padding: 18px 48px;
+    background-color: transparent;
+    color: #1a1a1a;
+    border: 1.5px solid #c0b8b0;
+    border-radius: 16px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: background-color 0.2s, border-color 0.2s, transform 0.15s, color 0.2s;
+}
+
+.button-copy:active { 
+    background-color: #f0cc30;
+    border-color: #1a1a1a;
+}
+
+
+.footer {
+    padding: 32px 0 40px;
+    font-size: 13px;
+    color: #b0a898;
+    letter-spacing: 0.25em;
+    font-family: 'Josefin Sans', sans-serif;
+}
